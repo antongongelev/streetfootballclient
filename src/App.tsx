@@ -1,20 +1,14 @@
-import {useEffect} from "react";
-import TelegramUserInfo from "./components/TelegramUserInfo";
-import MapWithLocation from "./components/MapWithLocation";
+import {Outlet} from 'react-router-dom';
+import Footer from './components/Footer';
+import './styles/MainLayout.css'; // Новый файл стилей
 
-function App() {
-    useEffect(() => {
-        if (window.Telegram?.WebApp) {
-            window.Telegram.WebApp.expand();
-        }
-    }, []);
-
+export default function App() {
     return (
-        <div className="app">
-            <TelegramUserInfo/>
-            <MapWithLocation/>
+        <div className="app-container">
+            <div className="content">
+                <Outlet/>
+            </div>
+            <Footer/>
         </div>
     );
 }
-
-export default App;
