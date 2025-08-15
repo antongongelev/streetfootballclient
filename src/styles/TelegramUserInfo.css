@@ -1,0 +1,47 @@
+.user-info {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+.user-details {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.user-details p {
+    margin: 8px 0;
+}
+
+.registered {
+    color: green;
+}
+
+.not-registered {
+    color: red;
+}
+
+button {
+    background: #0088cc;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #006699;
+}
