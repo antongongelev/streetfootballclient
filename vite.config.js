@@ -6,7 +6,7 @@ export default defineConfig({
     server: {
         port: 3000,
         host: true,
-        allowedHosts: ['4aa3966d919a1eb431628ff17a2be556.serveo.net'],
+        allowedHosts: ['6d691bfee9efb92e4ae267c665f76cc7.serveo.net'],
         // Удалите allowedHosts - это не нужно для serveo/ngrok
     },
     build: {

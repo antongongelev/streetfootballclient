@@ -40,4 +40,5 @@ export interface TelegramUser {
     is_premium?: boolean;
     photo_url?: string;
     allows_write_to_pm?: boolean;
+    auth_date?: number;
 }
