@@ -1,10 +1,13 @@
-import TelegramUserInfo from "../components/TelegramUserInfo";
+import React from 'react';
+import '../styles/global.css';
 
-export default function MapPage() {
+const ProfilePage: React.FC = () => {
     return (
         <div className="page">
             <h1>Профиль</h1>
-            <TelegramUserInfo/>
+            <p>Здесь будет профиль</p>
         </div>
     );
-}
+};
+
+export default ProfilePage;

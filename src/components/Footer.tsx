@@ -1,41 +1,40 @@
-import { NavLink } from 'react-router-dom';
-import '../styles/Footer.css'; // Стили подключим ниже
+import React from 'react';
+import '../styles/global.css';
 
-export default function Footer() {
+interface FooterProps {
+    activeTab: string;
+    onTabChange: (tab: string) => void;
+}
 
+const Footer: React.FC<FooterProps> = ({ activeTab, onTabChange }) => {
     return (
-        <footer className="app-footer">
-            <NavLink
-                to="/map"
-                className={({ isActive }) => isActive ? 'footer-item active' : 'footer-item'}
+        <footer className="footer">
+            <button
+                className={`footer-button ${activeTab === 'map' ? 'active' : ''}`}
+                onClick={() => onTabChange('map')}
             >
-                <span className="icon">🗺️</span>
-                <span>Карта</span>
-            </NavLink>
-
-            <NavLink
-                to="/events"
-                className={({ isActive }) => isActive ? 'footer-item active' : 'footer-item'}
+                Карта
+            </button>
+            <button
+                className={`footer-button ${activeTab === 'profile' ? 'active' : ''}`}
+                onClick={() => onTabChange('profile')}
             >
-                <span className="icon">📅</span>
-                <span>События</span>
-            </NavLink>
-
-            <NavLink
-                to="/profile"
-                className={({ isActive }) => isActive ? 'footer-item active' : 'footer-item'}
+                Профиль
+            </button>
+            <button
+                className={`footer-button ${activeTab === 'history' ? 'active' : ''}`}
+                onClick={() => onTabChange('history')}
             >
-                <span className="icon">👤</span>
-                <span>Профиль</span>
-            </NavLink>
-
-            <NavLink
-                to="/settings"
-                className={({ isActive }) => isActive ? 'footer-item active' : 'footer-item'}
+                История
+            </button>
+            <button
+                className={`footer-button ${activeTab === 'settings' ? 'active' : ''}`}
+                onClick={() => onTabChange('settings')}
             >
-                <span className="icon">⚙️</span>
-                <span>Настройки</span>
-            </NavLink>
+                Настройки
+            </button>
         </footer>
     );
-}
+};
+
+export default Footer;

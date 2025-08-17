@@ -1,10 +1,13 @@
-import MapWithLocation from "../components/MapWithLocation";
+import React from 'react';
+import '../styles/global.css';
 
-export default function MapPage() {
+const MapPage: React.FC = () => {
     return (
         <div className="page">
             <h1>Карта</h1>
-            <MapWithLocation/>
+            <p>Здесь будет карта с событиями</p>
         </div>
     );
-}
+};
+
+export default MapPage;

@@ -1,13 +1,13 @@
-export default function MapPage() {
+import React from 'react';
+import '../styles/global.css';
+
+const SettingsPage: React.FC = () => {
     return (
         <div className="page">
             <h1>Настройки</h1>
-            <li>1st</li>
-            <li>1st</li>
-            <li>1st</li>
-            <li>1st</li>
-            <li>1st</li>
-            <li>1st</li>
+            <p>Здесь будут настройки</p>
         </div>
     );
-}
+};
+
+export default SettingsPage;
