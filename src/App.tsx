@@ -15,19 +15,19 @@ const App: React.FC = () => {
     useEffect(() => {
         const loadPlayerData = async () => {
             try {
-                // // 1. Сначала проверяем доступность Telegram WebApp
-                // if (!window.Telegram?.WebApp) {
-                //     throw new Error('Telegram WebApp не доступен');
-                // }
-                //
-                // // 2. Получаем ID пользователя
-                // const telegramUserId = window.Telegram.WebApp.initDataUnsafe.user?.id || null;
-                // if (!telegramUserId) {
-                //     throw new Error('Пользователь не авторизован');
-                // }
+                // 1. Сначала проверяем доступность Telegram WebApp
+                if (!window.Telegram?.WebApp) {
+                    throw new Error('Telegram WebApp не доступен');
+                }
+
+                // 2. Получаем ID пользователя
+                const telegramUserId = window.Telegram.WebApp.initDataUnsafe.user?.id || null;
+                if (!telegramUserId) {
+                    throw new Error('Пользователь не авторизован');
+                }
 
                 // 3. Делаем запрос к API
-                const playerData = await PlayerService.getByTelegramId(132);
+                const playerData = await PlayerService.getByTelegramId(telegramUserId);
                 setIsLoading(false);
 
                 if (!playerData) {
