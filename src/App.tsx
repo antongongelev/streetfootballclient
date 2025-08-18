@@ -1,32 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import LoadingScreen from './components/LoadingScreen';
 import ErrorScreen from './components/ErrorScreen';
 import MainScreen from './components/MainScreen';
-import { fetchUser } from './api/mockApi';
+import {PlayerService} from "./api/playerService";
+import RegistrationScreen from "./components/RegistrationScreen";
+import {usePlayer} from "./contexts/PlayerContext";
 
 const App: React.FC = () => {
+    const { player, setPlayer } = usePlayer(); // Доступ к глобальному стейту
     const [isLoading, setIsLoading] = useState(true);
     const [errorText, setErrorText] = useState<string | null>(null);
+    const [isNewPlayer, setIsNewPlayer] = useState(false);
 
     useEffect(() => {
-        const loadUserData = async () => {
+        const loadPlayerData = async () => {
             try {
-                // 1. Сначала проверяем доступность Telegram WebApp
-                if (!window.Telegram?.WebApp) {
-                    throw new Error('Telegram WebApp не доступен');
-                }
-
-                // 2. Получаем ID пользователя
-                const telegramUserId = window.Telegram.WebApp.initDataUnsafe.user?.id || null;
-                if (!telegramUserId) {
-                    throw new Error('Пользователь не авторизован');
-                }
+                // // 1. Сначала проверяем доступность Telegram WebApp
+                // if (!window.Telegram?.WebApp) {
+                //     throw new Error('Telegram WebApp не доступен');
+                // }
+                //
+                // // 2. Получаем ID пользователя
+                // const telegramUserId = window.Telegram.WebApp.initDataUnsafe.user?.id || null;
+                // if (!telegramUserId) {
+                //     throw new Error('Пользователь не авторизован');
+                // }
 
                 // 3. Делаем запрос к API
-                const response = await fetchUser(telegramUserId);
-                if (!response.success) throw new Error('Ошибка загрузки данных');
-
+                const playerData = await PlayerService.getByTelegramId(132);
                 setIsLoading(false);
+
+                if (!playerData) {
+                    setIsNewPlayer(true)
+                    return;
+                }
+
+                setPlayer(playerData);
+
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
                 setErrorText(errorMessage);
@@ -34,13 +44,14 @@ const App: React.FC = () => {
             }
         };
 
-        loadUserData();
+        loadPlayerData();
     }, []);
 
-    if (isLoading) return <LoadingScreen />;
-    if (errorText) return <ErrorScreen message={errorText} />;
+    if (isLoading) return <LoadingScreen/>;
+    if (isNewPlayer) return <RegistrationScreen/>;
+    if (errorText) return <ErrorScreen message={errorText}/>;
 
-    return <MainScreen />;
+    return <MainScreen/>;
 };
 
 export default App;
