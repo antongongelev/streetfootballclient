@@ -13,25 +13,25 @@ const Footer: React.FC<FooterProps> = ({ activeTab, onTabChange }) => {
                 className={`footer-button ${activeTab === 'map' ? 'active' : ''}`}
                 onClick={() => onTabChange('map')}
             >
-                Карта
+                🗺️ Карта
             </button>
             <button
                 className={`footer-button ${activeTab === 'profile' ? 'active' : ''}`}
                 onClick={() => onTabChange('profile')}
             >
-                Профиль
+                👤 Профиль
             </button>
             <button
                 className={`footer-button ${activeTab === 'history' ? 'active' : ''}`}
                 onClick={() => onTabChange('history')}
             >
-                История
+                📊 История
             </button>
             <button
                 className={`footer-button ${activeTab === 'settings' ? 'active' : ''}`}
                 onClick={() => onTabChange('settings')}
             >
-                Настройки
+                ⚙️ Настройки
             </button>
         </footer>
     );

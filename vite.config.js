@@ -6,7 +6,7 @@ export default defineConfig({
     server: {
         port: 3000,
         host: true,
-        allowedHosts: ['63fd666ef942edac2c8493030d3a9237.serveo.net'],
+        allowedHosts: ['38d076baf2bae342305b842b8a1b05d6.serveo.net'],
     },
     build: {
         outDir: 'dist',

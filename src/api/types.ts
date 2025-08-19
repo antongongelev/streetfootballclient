@@ -16,11 +16,18 @@ export type Player = {
     telegramId: number;
     nickname: string;
     birthDate: string;
-    rank: number;
     primaryPosition: string;
     secondaryPosition: string | null;
     avatar: string | null;
     createdAt: string;
 };
+
+export interface RegistrationData {
+    nickname: string;
+    male: boolean;
+    birthDate: string;
+    primaryPosition: string;
+    secondaryPosition: string | null;
+}
 
 // Другие DTO можно добавлять здесь

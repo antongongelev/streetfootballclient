@@ -1,13 +1,11 @@
 import React from 'react';
+import { LoadingOverlay } from './ui/LoadingOverlay';
 import '../styles/global.css';
 
 const LoadingScreen: React.FC = () => {
     return (
         <div className="screen-container">
-            <div className="loading-animation">
-                <div className="spinner"></div>
-                <p>Загрузка...</p>
-            </div>
+            <LoadingOverlay message="Загрузка..." show={true} />
         </div>
     );
 };

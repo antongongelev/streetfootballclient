@@ -5,6 +5,8 @@ import {Player} from "../api/types";
 interface PlayerContextType {
     player: Player | null;
     setPlayer: (player: Player | null) => void;
+    telegramId: number | null;
+    setTelegramId: (id: number | null) => void;
 }
 
 // Создаем контекст с начальным значением `null`
@@ -13,9 +15,10 @@ const PlayerContext = createContext<PlayerContextType | null>(null);
 // Провайдер для обертки приложения
 export const PlayerProvider = ({children}: { children: ReactNode }) => {
     const [player, setPlayer] = useState<Player | null>(null);
+    const [telegramId, setTelegramId] = useState<number | null>(null);
 
     return (
-        <PlayerContext.Provider value={{player, setPlayer}}>
+        <PlayerContext.Provider value={{player, setPlayer, telegramId, setTelegramId}}>
             {children}
         </PlayerContext.Provider>
     );

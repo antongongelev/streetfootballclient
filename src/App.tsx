@@ -7,31 +7,32 @@ import RegistrationScreen from "./components/RegistrationScreen";
 import {usePlayer} from "./contexts/PlayerContext";
 
 const App: React.FC = () => {
-    const { player, setPlayer } = usePlayer(); // Доступ к глобальному стейту
+    const { player, setPlayer, setTelegramId } = usePlayer();
     const [isLoading, setIsLoading] = useState(true);
     const [errorText, setErrorText] = useState<string | null>(null);
     const [isNewPlayer, setIsNewPlayer] = useState(false);
+    const [registrationComplete, setRegistrationComplete] = useState(false); // Новое состояние
 
     useEffect(() => {
         const loadPlayerData = async () => {
             try {
-                // 1. Сначала проверяем доступность Telegram WebApp
                 if (!window.Telegram?.WebApp) {
                     throw new Error('Telegram WebApp не доступен');
                 }
 
-                // 2. Получаем ID пользователя
                 const telegramUserId = window.Telegram.WebApp.initDataUnsafe.user?.id || null;
                 if (!telegramUserId) {
                     throw new Error('Пользователь не авторизован');
                 }
+                setTelegramId(telegramUserId);
 
-                // 3. Делаем запрос к API
+                await new Promise(resolve => setTimeout(resolve, 4000));
+
                 const playerData = await PlayerService.getByTelegramId(telegramUserId);
                 setIsLoading(false);
 
                 if (!playerData) {
-                    setIsNewPlayer(true)
+                    setIsNewPlayer(true);
                     return;
                 }
 
@@ -47,8 +48,18 @@ const App: React.FC = () => {
         loadPlayerData();
     }, []);
 
+    // Обработчик успешной регистрации
+    const handleRegistrationSuccess = () => {
+        setRegistrationComplete(true);
+    };
+
+    // Если регистрация завершена, показываем MainScreen
+    if (registrationComplete) {
+        return <MainScreen />;
+    }
+
     if (isLoading) return <LoadingScreen/>;
-    if (isNewPlayer) return <RegistrationScreen/>;
+    if (isNewPlayer) return <RegistrationScreen onRegistrationSuccess={handleRegistrationSuccess} />;
     if (errorText) return <ErrorScreen message={errorText}/>;
 
     return <MainScreen/>;
