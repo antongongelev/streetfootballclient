@@ -1,0 +1,80 @@
+/* DatePicker.css */
+.date-picker-container {
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+}
+
+.date-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 16px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    box-sizing: border-box;
+    font-family: inherit;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23707579' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3e%3c/rect%3e%3cline x1='16' y1='2' x2='16' y2='6'%3e%3c/line%3e%3cline x1='8' y1='2' x2='8' y2='6'%3e%3c/line%3e%3cline x1='3' y1='10' x2='21' y2='10'%3e%3c/line%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: var(--button-color);
+}
+
+/* Кастомная иконка календаря */
+.calendar-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Чтобы клики проходили сквозь на input */
+    font-size: 18px;
+    opacity: 0.6;
+}
+
+/* Скрываем нативную иконку в браузерах, которые её показывают */
+.date-input::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.date-input::-webkit-datetime-edit-fields-wrapper {
+    color: var(--text-color);
+}
+
+/* Для Firefox */
+.date-input::-moz-focus-inner {
+    border: 0;
+}
+
+@supports (-moz-appearance: none) {
+    .date-input {
+        background-image: none;
+        padding-right: 40px;
+    }
+
+    .calendar-icon {
+        display: block;
+    }
+}
+
+/* Для WebKit браузеров (Chrome, Safari) */
+@supports (not (-moz-appearance: none)) {
+    .calendar-icon {
+        display: none; /* Скрываем кастомную иконку, т.к. есть нативная */
+    }
+}

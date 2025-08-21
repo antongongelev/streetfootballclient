@@ -1,5 +1,4 @@
 import React from 'react';
-import '../styles/global.css';
 
 interface ErrorScreenProps {
     message?: string; // Опциональное сообщение об ошибке

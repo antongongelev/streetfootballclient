@@ -4,7 +4,6 @@ import MapPage from '../pages/MapPage';
 import ProfilePage from '../pages/ProfilePage';
 import HistoryPage from '../pages/HistoryPage';
 import SettingsPage from '../pages/SettingsPage';
-import '../styles/global.css';
 
 const MainScreen: React.FC = () => {
     const [activeTab, setActiveTab] = useState('map');

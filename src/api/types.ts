@@ -29,5 +29,3 @@ export interface RegistrationData {
     primaryPosition: string;
     secondaryPosition: string | null;
 }
-
-// Другие DTO можно добавлять здесь

@@ -5,28 +5,30 @@ import MainScreen from './components/MainScreen';
 import {PlayerService} from "./api/playerService";
 import RegistrationScreen from "./components/RegistrationScreen";
 import {usePlayer} from "./contexts/PlayerContext";
+import {TelegramService} from "./services/telegramService";
 
 const App: React.FC = () => {
-    const { player, setPlayer, setTelegramId } = usePlayer();
+    const {player, setPlayer, setTelegramId} = usePlayer();
     const [isLoading, setIsLoading] = useState(true);
     const [errorText, setErrorText] = useState<string | null>(null);
     const [isNewPlayer, setIsNewPlayer] = useState(false);
     const [registrationComplete, setRegistrationComplete] = useState(false); // Новое состояние
 
     useEffect(() => {
-        const loadPlayerData = async () => {
+        const initApp = async () => {
             try {
-                if (!window.Telegram?.WebApp) {
-                    throw new Error('Telegram WebApp не доступен');
-                }
+                // Инициализируем Telegram WebApp
+                TelegramService.init();
+                TelegramService.expand();
 
-                const telegramUserId = window.Telegram.WebApp.initDataUnsafe.user?.id || null;
+                const telegramUserId = TelegramService.getUserId();
                 if (!telegramUserId) {
                     throw new Error('Пользователь не авторизован');
                 }
+
                 setTelegramId(telegramUserId);
 
-                await new Promise(resolve => setTimeout(resolve, 4000));
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
                 const playerData = await PlayerService.getByTelegramId(telegramUserId);
                 setIsLoading(false);
@@ -39,13 +41,15 @@ const App: React.FC = () => {
                 setPlayer(playerData);
 
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
+                const errorMessage = error instanceof Error ? error.message : '! ошибка';
                 setErrorText(errorMessage);
+
+            } finally {
                 setIsLoading(false);
             }
         };
 
-        loadPlayerData();
+        initApp();
     }, []);
 
     // Обработчик успешной регистрации
@@ -55,7 +59,7 @@ const App: React.FC = () => {
 
     // Если регистрация завершена, показываем MainScreen
     if (registrationComplete) {
-        return <MainScreen />;
+        return <MainScreen/>;
     }
 
     if (isLoading) return <LoadingScreen/>;
