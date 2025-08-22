@@ -29,3 +29,33 @@ export interface RegistrationData {
     primaryPosition: string;
     secondaryPosition: string | null;
 }
+
+// types/react-image-crop.d.ts
+declare module 'react-image-crop' {
+    export interface Crop {
+        unit?: 'px' | '%';
+        x?: number;
+        y?: number;
+        width?: number;
+        height?: number;
+    }
+
+    export interface PixelCrop extends Crop {
+        unit: 'px';
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    }
+
+    export interface ReactCropProps {
+        crop: Crop;
+        onChange: (crop: Crop) => void;
+        onComplete?: (crop: PixelCrop) => void;
+        children: React.ReactNode;
+        aspect?: number;
+        circularCrop?: boolean;
+    }
+
+    const ReactCrop: React.FC<ReactCropProps>;
+}

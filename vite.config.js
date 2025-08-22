@@ -10,6 +10,7 @@ export default defineConfig({
         allowedHosts: ['38d076baf2bae342305b842b8a1b05d6.serveo.net'],
     },
     build: {
+        sourcemap: true,
         outDir: 'dist',
         emptyOutDir: true,
         // Удалите rollupOptions.input - это ломает сборку

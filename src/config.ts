@@ -5,6 +5,6 @@ export const config = {
         defaultHeaders: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-        }
+        },
     }
 };

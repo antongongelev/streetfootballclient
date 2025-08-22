@@ -1,9 +1,10 @@
 // RegistrationScreen.tsx
-import React, { useState, useRef } from "react";
-import { usePlayer } from "../contexts/PlayerContext";
-import { PlayerService } from "../api/playerService";
+import React, {useRef, useState} from "react";
+import {usePlayer} from "../contexts/PlayerContext";
+import {PlayerService} from "../api/playerService";
 import DatePicker from "./DatePicker";
 import LoadingSpinner from "./LoadingSpinner";
+import AvatarEditorModal from "./AvatarEditorModal";
 import "../styles/registration.css";
 
 interface RegistrationScreenProps {
@@ -12,8 +13,8 @@ interface RegistrationScreenProps {
 
 const POSITIONS = ['GK', 'DEF', 'MID', 'FWD'];
 
-const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationSuccess }) => {
-    const { telegramId } = usePlayer();
+const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSuccess}) => {
+    const {telegramId} = usePlayer();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [formData, setFormData] = useState({
         nickname: '',
@@ -24,8 +25,64 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
         avatar: null as File | null,
     });
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const [originalImage, setOriginalImage] = useState<string | null>(null);
+    const [showAvatarEditor, setShowAvatarEditor] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isLoading, setIsLoading] = useState(false);
+
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            if (!file.type.startsWith('image/')) {
+                setErrors({avatar: 'Пожалуйста, выберите изображение'});
+                return;
+            }
+
+            if (file.size > 1024 * 1024) {
+                setErrors({avatar: 'Размер файла не должен превышать 5MB'});
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imageUrl = e.target?.result as string;
+                setOriginalImage(imageUrl);
+                setShowAvatarEditor(true);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleCroppedImage = (blob: Blob) => {
+        let fileName = telegramId + '.jpg';
+        const file = new File([blob], fileName, {type: 'image/jpeg'});
+        setFormData(prev => ({...prev, avatar: file}));
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setAvatarPreview(e.target?.result as string);
+        };
+        reader.readAsDataURL(blob);
+
+        setShowAvatarEditor(false);
+        setOriginalImage(null);
+    };
+
+    const handleCancelCrop = () => {
+        setShowAvatarEditor(false);
+        setOriginalImage(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
+    const removeAvatar = () => {
+        setFormData(prev => ({...prev, avatar: null}));
+        setAvatarPreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
 
     const validateForm = () => {
         const newErrors: Record<string, string> = {};
@@ -38,38 +95,6 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            if (!file.type.startsWith('image/')) {
-                setErrors({ avatar: 'Пожалуйста, выберите изображение' });
-                return;
-            }
-
-            if (file.size > 1024 * 1024) {
-                setErrors({ avatar: 'Размер файла не должен превышать 1MB' });
-                return;
-            }
-
-            setFormData(prev => ({ ...prev, avatar: file }));
-            setErrors(prev => ({ ...prev, avatar: '' }));
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                setAvatarPreview(e.target?.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const removeAvatar = () => {
-        setFormData(prev => ({ ...prev, avatar: null }));
-        setAvatarPreview(null);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -77,6 +102,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
 
         setIsLoading(true);
         try {
+
             await PlayerService.register(telegramId!, {
                 nickname: formData.nickname,
                 male: formData.male,
@@ -86,12 +112,17 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
             });
 
             if (formData.avatar) {
-                // TODO: Загрузка аватара
+                try {
+                    await PlayerService.uploadAvatar(telegramId!, formData.avatar);
+                } catch (uploadError) {
+                    console.warn('Не удалось загрузить аватар, но пользователь создан', uploadError);
+                    // Можно показать предупреждение, но не прерывать регистрацию
+                }
             }
 
             onRegistrationSuccess();
         } catch (error) {
-            setErrors({ submit: 'Ошибка регистрации. Попробуйте снова.' });
+            setErrors({submit: 'Ошибка регистрации. Попробуйте снова.'});
         } finally {
             setIsLoading(false);
         }
@@ -103,6 +134,14 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
 
     return (
         <div className="registration-container">
+            {showAvatarEditor && originalImage && (
+                <AvatarEditorModal
+                    imageSrc={originalImage}
+                    onSave={handleCroppedImage}
+                    onCancel={handleCancelCrop}
+                />
+            )}
+
             <div className="registration-header">
                 <h2>Регистрация</h2>
             </div>
@@ -115,14 +154,14 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                         type="file"
                         accept="image/*"
                         onChange={handleAvatarChange}
-                        style={{ display: 'none' }}
+                        style={{display: 'none'}}
                         id="avatar-upload"
                     />
 
                     <div className="avatar-preview-container">
                         <div className="avatar-preview" onClick={triggerFileInput}>
                             {avatarPreview ? (
-                                <img src={avatarPreview} alt="Аватар" className="avatar-image" />
+                                <img src={avatarPreview} alt="Аватар" className="avatar-image"/>
                             ) : (
                                 <div className="avatar-placeholder">
                                     <span className="avatar-icon">📸</span>
@@ -150,7 +189,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                         type="text"
                         placeholder="Никнейм (макс. 30 символов)"
                         value={formData.nickname}
-                        onChange={(e) => setFormData(prev => ({ ...prev, nickname: e.target.value }))}
+                        onChange={(e) => setFormData(prev => ({...prev, nickname: e.target.value}))}
                         className="tg-input nickname-input"
                         maxLength={30}
                     />
@@ -164,14 +203,14 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                         <button
                             type="button"
                             className={`gender-option ${formData.male ? 'active' : ''}`}
-                            onClick={() => setFormData(prev => ({ ...prev, male: true }))}
+                            onClick={() => setFormData(prev => ({...prev, male: true}))}
                         >
                             Мужской
                         </button>
                         <button
                             type="button"
                             className={`gender-option ${!formData.male ? 'active' : ''}`}
-                            onClick={() => setFormData(prev => ({ ...prev, male: false }))}
+                            onClick={() => setFormData(prev => ({...prev, male: false}))}
                         >
                             Женский
                         </button>
@@ -183,7 +222,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                     <label className="form-label">Дата рождения:</label>
                     <DatePicker
                         value={formData.birthDate}
-                        onChange={(date) => setFormData(prev => ({ ...prev, birthDate: date }))}
+                        onChange={(date) => setFormData(prev => ({...prev, birthDate: date}))}
                     />
                     {errors.birthDate && (
                         <div className="error-text date-error">{errors.birthDate}</div>
@@ -195,7 +234,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                     <label className="form-label">Основная роль:</label>
                     <select
                         value={formData.primaryPosition}
-                        onChange={(e) => setFormData(prev => ({ ...prev, primaryPosition: e.target.value }))}
+                        onChange={(e) => setFormData(prev => ({...prev, primaryPosition: e.target.value}))}
                         className="tg-input"
                     >
                         <option value="">Выберите роль</option>
@@ -211,7 +250,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                     <label className="form-label">Дополнительная роль (необязательно):</label>
                     <select
                         value={formData.secondaryPosition}
-                        onChange={(e) => setFormData(prev => ({ ...prev, secondaryPosition: e.target.value }))}
+                        onChange={(e) => setFormData(prev => ({...prev, secondaryPosition: e.target.value}))}
                         className="tg-input"
                     >
                         <option value="">Не выбрано</option>
@@ -228,7 +267,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                     className="tg-button submit-button"
                     disabled={isLoading}
                 >
-                    {isLoading ? <LoadingSpinner /> : 'Зарегистрироваться'}
+                    {isLoading ? <LoadingSpinner/> : 'Зарегистрироваться'}
                 </button>
             </form>
         </div>
