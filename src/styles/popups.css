@@ -62,7 +62,7 @@
     flex: 1;
 }
 
-/* ЯРКИЕ цветные кружки */
+/* ЯРКИЕ цветные кружки с анимацией */
 .popup-icon-container {
     width: 32px;
     height: 32px;
@@ -71,22 +71,38 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    animation: iconScale 1s ease-in-out;
+}
+
+@keyframes iconScale {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .popup-success .popup-icon-container {
-    background-color: #4CAF50; /* Яркий зеленый */
+    background: linear-gradient(135deg, #4CAF50, #45a049);
 }
 
 .popup-warn .popup-icon-container {
-    background-color: #FF9800; /* Яркий оранжевый */
+    background: linear-gradient(135deg, #FF9800, #f57c00);
 }
 
 .popup-error .popup-icon-container {
-    background-color: #F44336; /* Яркий красный */
+    background: linear-gradient(135deg, #F44336, #e53935);
 }
 
 .popup-info .popup-icon-container {
-    background-color: #2196F3; /* Яркий синий */
+    background: linear-gradient(135deg, #2196F3, #1976d2);
 }
 
 /* Белые иконки на ярком фоне */
@@ -94,7 +110,23 @@
     width: 18px;
     height: 18px;
     object-fit: contain;
-    filter: brightness(0) invert(1); /* Делаем иконки белыми */
+    filter: brightness(0) invert(1);
+    animation: iconImageScale 1s ease-in-out;
+}
+
+@keyframes iconImageScale {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .popup-message {
@@ -123,23 +155,6 @@
     opacity: 1;
 }
 
-/* Альтернативный вариант с градиентами для еще большей яркости */
-.popup-success .popup-icon-container {
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-}
-
-.popup-warn .popup-icon-container {
-    background: linear-gradient(135deg, #FF9800, #f57c00);
-}
-
-.popup-error .popup-icon-container {
-    background: linear-gradient(135deg, #F44336, #e53935);
-}
-
-.popup-info .popup-icon-container {
-    background: linear-gradient(135deg, #2196F3, #1976d2);
-}
-
 /* Эффекты при наведении */
 .popup-icon-container {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -153,4 +168,58 @@
 /* Для темной темы - добавляем тень для лучшей видимости */
 body.tg-theme-dark .popup-icon-container {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Альтернативный вариант с более выразительной анимацией */
+.popup-icon-container {
+    animation: iconBounce 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes iconBounce {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    70% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Анимация для всего popup */
+.popup-visible {
+    animation: popupSlideIn 0.3s ease-out;
+}
+
+@keyframes popupSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.popup-hidden {
+    animation: popupSlideOut 0.3s ease-in;
+}
+
+@keyframes popupSlideOut {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
 }
