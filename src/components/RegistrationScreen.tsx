@@ -6,6 +6,7 @@ import DatePicker from "./DatePicker";
 import LoadingSpinner from "./LoadingSpinner";
 import AvatarEditorModal from "./AvatarEditorModal";
 import "../styles/registration.css";
+import {usePopupHelpers} from '../hooks/usePopupHelpers';
 
 interface RegistrationScreenProps {
     onRegistrationSuccess: () => void;
@@ -14,6 +15,7 @@ interface RegistrationScreenProps {
 const POSITIONS = ['GK', 'DEF', 'MID', 'FWD'];
 
 const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSuccess}) => {
+    const {success, warn, error, info} = usePopupHelpers();
     const {telegramId} = usePlayer();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [formData, setFormData] = useState({
@@ -85,6 +87,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
     };
 
     const validateForm = () => {
+
         const newErrors: Record<string, string> = {};
         if (!formData.nickname.trim()) newErrors.nickname = 'Введите никнейм';
         if (formData.nickname.length > 30) newErrors.nickname = 'Максимум 30 символов';
@@ -92,7 +95,13 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
         if (!formData.primaryPosition) newErrors.primaryPosition = 'Выберите основную роль';
 
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
+        let valid = Object.keys(newErrors).length === 0;
+
+        if (!valid) {
+            warn('Пожалуйста, проверьте данные')
+        }
+
+        return valid;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -115,8 +124,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
                 try {
                     await PlayerService.uploadAvatar(telegramId!, formData.avatar);
                 } catch (uploadError) {
-                    console.warn('Не удалось загрузить аватар, но пользователь создан', uploadError);
-                    // Можно показать предупреждение, но не прерывать регистрацию
+                    error('Не удалось сохранить аватар')
                 }
             }
 
@@ -133,6 +141,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
     };
 
     return (
+
         <div className="registration-container">
             {showAvatarEditor && originalImage && (
                 <AvatarEditorModal

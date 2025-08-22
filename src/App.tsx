@@ -1,3 +1,4 @@
+// App.tsx
 import React, {useEffect, useState} from 'react';
 import LoadingScreen from './components/LoadingScreen';
 import ErrorScreen from './components/ErrorScreen';
@@ -6,13 +7,19 @@ import {PlayerService} from "./api/playerService";
 import RegistrationScreen from "./components/RegistrationScreen";
 import {usePlayer} from "./contexts/PlayerContext";
 import {TelegramService} from "./services/telegramService";
+import {useTelegramTheme} from './hooks/useTelegramTheme'; // Добавляем импорт
+import { PopupContainer } from './components/PopupContainer';
+import './styles/popups.css'; // Добавляем импорт CSS
 
 const App: React.FC = () => {
     const {player, setPlayer, setTelegramId} = usePlayer();
     const [isLoading, setIsLoading] = useState(true);
     const [errorText, setErrorText] = useState<string | null>(null);
     const [isNewPlayer, setIsNewPlayer] = useState(false);
-    const [registrationComplete, setRegistrationComplete] = useState(false); // Новое состояние
+    const [registrationComplete, setRegistrationComplete] = useState(false);
+
+    // Используем хук темы - это самое важное изменение!
+    const theme = useTelegramTheme();
 
     useEffect(() => {
         const initApp = async () => {
@@ -23,7 +30,7 @@ const App: React.FC = () => {
 
                 let telegramUserId = TelegramService.getUserId();
                 if (!telegramUserId) {
-                    telegramUserId = 123;
+                    telegramUserId = Math.floor(Math.random() * (100000 - 1 + 1)) + 1
                 }
 
                 setTelegramId(telegramUserId);
@@ -57,16 +64,20 @@ const App: React.FC = () => {
         setRegistrationComplete(true);
     };
 
-    // Если регистрация завершена, показываем MainScreen
-    if (registrationComplete) {
+    const renderContent = () => {
+        if (registrationComplete) return <MainScreen/>;
+        if (isLoading) return <LoadingScreen/>;
+        if (isNewPlayer) return <RegistrationScreen onRegistrationSuccess={handleRegistrationSuccess}/>;
+        if (errorText) return <ErrorScreen message={errorText}/>;
         return <MainScreen/>;
-    }
+    };
 
-    if (isLoading) return <LoadingScreen/>;
-    if (isNewPlayer) return <RegistrationScreen onRegistrationSuccess={handleRegistrationSuccess} />;
-    if (errorText) return <ErrorScreen message={errorText}/>;
-
-    return <MainScreen/>;
+    return (
+        <>
+            {renderContent()}
+            <PopupContainer/> {/* Всегда отображаем контейнер для popup'ов */}
+        </>
+    );
 };
 
 export default App;
