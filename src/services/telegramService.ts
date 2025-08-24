@@ -19,4 +19,10 @@ export class TelegramService {
             window.Telegram.WebApp.expand();
         }
     }
+
+    static getAvatarUrl(): string | null {
+        const user = this.getUser();
+        // photo_url может быть строкой или undefined
+        return user?.photo_url || null;
+    }
 }
