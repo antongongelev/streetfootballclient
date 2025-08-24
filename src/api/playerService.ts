@@ -46,4 +46,13 @@ export const PlayerService = {
         }
     },
 
+    deleteAvatar: async (telegramId: number): Promise<void> => {
+        try {
+            await ApiClient.delete(`/players/avatar/${telegramId}`);
+        } catch (error) {
+            console.error('Avatar deletion failed:', error);
+            throw new Error('Failed to delete avatar');
+        }
+    },
+
 };

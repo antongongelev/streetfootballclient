@@ -9,12 +9,14 @@ import "../styles/registration.css";
 import { usePopupHelpers } from '../hooks/usePopupHelpers';
 import { TelegramService } from "../services/telegramService";
 import CancelIcon from '../assets/icons/cancel.png';
+import {PositionCode, POSITIONS} from "../api/types";
 
 interface RegistrationScreenProps {
     onRegistrationSuccess: () => void;
 }
 
-const POSITIONS = ['GK', 'DEF', 'MID', 'FWD'];
+// Используем коды позиций из types.ts
+const POSITION_CODES = Object.keys(POSITIONS) as PositionCode[];
 
 const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationSuccess }) => {
     const { success, warn, error } = usePopupHelpers();
@@ -125,11 +127,6 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
         }
     };
 
-    const clearNickname = () => {
-        setFormData(prev => ({...prev, nickname: ''}));
-        setUsingTelegramData(prev => ({ ...prev, nickname: false }));
-    };
-
     const validateForm = (): boolean => {
         const newErrors: Record<string, string> = {};
 
@@ -215,7 +212,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
             )}
 
             <div className="registration-header">
-                <p>Заполните информацию для создания профиля</p>
+                <h3>Укажите данные профиля</h3>
             </div>
 
             <form onSubmit={handleSubmit} className="registration-form">
@@ -343,8 +340,10 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                         disabled={isLoading}
                     >
                         <option value="">Выберите роль</option>
-                        {POSITIONS.map(pos => (
-                            <option key={pos} value={pos}>{pos}</option>
+                        {POSITION_CODES.map(code => (
+                            <option key={code} value={code}>
+                                {POSITIONS[code]}
+                            </option>
                         ))}
                     </select>
                     {errors.primaryPosition && (
@@ -362,8 +361,10 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                         disabled={isLoading}
                     >
                         <option value="">Не выбрано</option>
-                        {POSITIONS.map(pos => (
-                            <option key={pos} value={pos}>{pos}</option>
+                        {POSITION_CODES.map(code => (
+                            <option key={code} value={code}>
+                                {POSITIONS[code]}
+                            </option>
                         ))}
                     </select>
                 </div>

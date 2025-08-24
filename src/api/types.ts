@@ -30,6 +30,21 @@ export interface RegistrationData {
     secondaryPosition: string | null;
 }
 
+// Константы для позиций
+export const POSITIONS = {
+    GK: 'Вратарь',
+    DEF: 'Защитник',
+    MID: 'Полузащитник',
+    FWD: 'Нападающий'
+} as const;
+
+export type PositionCode = keyof typeof POSITIONS;
+
+// Функция для получения названия позиции по коду
+export const getPositionName = (code: string): string => {
+    return POSITIONS[code as PositionCode] || code;
+};
+
 // types/react-image-crop.d.ts
 declare module 'react-image-crop' {
     export interface Crop {
