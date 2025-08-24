@@ -1,13 +1,13 @@
 // components/RegistrationScreen.tsx
-import React, { useRef, useState, useEffect } from "react";
-import { usePlayer } from "../contexts/PlayerContext";
-import { PlayerService } from "../api/playerService";
+import React, {useEffect, useRef, useState} from "react";
+import {usePlayer} from "../contexts/PlayerContext";
+import {PlayerService} from "../api/playerService";
 import DatePicker from "./DatePicker";
 import LoadingSpinner from "./LoadingSpinner";
 import AvatarEditorModal from "./AvatarEditorModal";
 import "../styles/registration.css";
-import { usePopupHelpers } from '../hooks/usePopupHelpers';
-import { TelegramService } from "../services/telegramService";
+import {usePopupHelpers} from '../hooks/usePopupHelpers';
+import {TelegramService} from "../services/telegramService";
 import CancelIcon from '../assets/icons/cancel.png';
 import {PositionCode, POSITIONS} from "../api/types";
 
@@ -18,9 +18,9 @@ interface RegistrationScreenProps {
 // Используем коды позиций из types.ts
 const POSITION_CODES = Object.keys(POSITIONS) as PositionCode[];
 
-const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationSuccess }) => {
-    const { success, warn, error } = usePopupHelpers();
-    const { telegramId, setPlayer } = usePlayer();
+const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSuccess}) => {
+    const {success, warn, error} = usePopupHelpers();
+    const {telegramId, setPlayer} = usePlayer();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [formData, setFormData] = useState({
@@ -59,15 +59,15 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                     : telegramUser.last_name || '');
 
             if (telegramNickname) {
-                setFormData(prev => ({ ...prev, nickname: telegramNickname }));
-                setUsingTelegramData(prev => ({ ...prev, nickname: true }));
+                setFormData(prev => ({...prev, nickname: telegramNickname}));
+                setUsingTelegramData(prev => ({...prev, nickname: true}));
             }
         }
 
         // Аватар из Telegram
         if (avatarUrl) {
             setAvatarPreview(avatarUrl);
-            setUsingTelegramData(prev => ({ ...prev, avatar: true }));
+            setUsingTelegramData(prev => ({...prev, avatar: true}));
         }
     }, []);
 
@@ -98,7 +98,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
         const fileName = `avatar-${telegramId}.jpg`;
         const file = new File([blob], fileName, {type: 'image/jpeg'});
         setFormData(prev => ({...prev, avatar: file}));
-        setUsingTelegramData(prev => ({ ...prev, avatar: false }));
+        setUsingTelegramData(prev => ({...prev, avatar: false}));
 
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -120,7 +120,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
 
     const removeAvatar = () => {
         setFormData(prev => ({...prev, avatar: null}));
-        setUsingTelegramData(prev => ({ ...prev, avatar: true }));
+        setUsingTelegramData(prev => ({...prev, avatar: true}));
         setAvatarPreview(telegramAvatarUrl);
         if (fileInputRef.current) {
             fileInputRef.current.value = '';
@@ -178,7 +178,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                 try {
                     await PlayerService.uploadAvatar(telegramId!, formData.avatar);
                     // Обновляем аватар в контексте
-                    setPlayer({ ...playerData, avatar: URL.createObjectURL(formData.avatar) });
+                    setPlayer({...playerData, avatar: URL.createObjectURL(formData.avatar)});
                 } catch (uploadError) {
                     console.error('Avatar upload failed:', uploadError);
                     error('Не удалось сохранить аватар');
@@ -190,7 +190,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
 
         } catch (err) {
             console.error('Registration failed:', err);
-            setErrors({ submit: 'Ошибка регистрации. Попробуйте снова.' });
+            setErrors({submit: 'Ошибка регистрации. Попробуйте снова.'});
             error('Ошибка при регистрации');
         } finally {
             setIsLoading(false);
@@ -223,7 +223,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                         type="file"
                         accept="image/*"
                         onChange={handleAvatarChange}
-                        style={{ display: 'none' }}
+                        style={{display: 'none'}}
                         id="avatar-upload"
                     />
 
@@ -255,7 +255,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                                 onClick={removeAvatar}
                                 title="Вернуть аватар Telegram"
                             >
-                                <img src={CancelIcon} alt="Удалить" className="remove-avatar-icon" />
+                                <img src={CancelIcon} alt="Удалить" className="remove-avatar-icon"/>
                             </button>
                         )}
                     </div>
@@ -275,7 +275,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                             value={formData.nickname}
                             onChange={(e) => {
                                 setFormData(prev => ({...prev, nickname: e.target.value}));
-                                setUsingTelegramData(prev => ({ ...prev, nickname: false }));
+                                setUsingTelegramData(prev => ({...prev, nickname: false}));
                             }}
                             className="tg-input nickname-input"
                             maxLength={30}
@@ -378,7 +378,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ onRegistrationS
                     className="tg-button submit-button"
                     disabled={isLoading}
                 >
-                    {isLoading ? <LoadingSpinner /> : 'Зарегистрироваться'}
+                    {isLoading ? <LoadingSpinner/> : 'Зарегистрироваться'}
                 </button>
             </form>
         </div>
