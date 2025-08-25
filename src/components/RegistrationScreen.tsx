@@ -1,6 +1,6 @@
 // components/RegistrationScreen.tsx
 import React, {useEffect, useState} from "react";
-import {usePlayer} from "../contexts/PlayerContext";
+import {useApplicationContext} from "../contexts/PlayerContext";
 import {PlayerService} from "../api/playerService";
 import DatePicker from "./DatePicker";
 import LoadingSpinner from "./LoadingSpinner";
@@ -17,7 +17,7 @@ const POSITION_CODES = Object.keys(POSITIONS) as PositionCode[];
 
 const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSuccess}) => {
     const {success, warn, error} = usePopupHelpers();
-    const {telegramUser, setPlayer} = usePlayer();
+    const {telegramUser, setPlayer} = useApplicationContext();
 
     const [formData, setFormData] = useState({
         nickname: '',

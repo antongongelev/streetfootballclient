@@ -5,12 +5,12 @@ import ErrorScreen from './components/ErrorScreen';
 import MainScreen from './components/MainScreen';
 import {PlayerService} from "./api/playerService";
 import RegistrationScreen from "./components/RegistrationScreen";
-import {usePlayer} from "./contexts/PlayerContext";
+import {useApplicationContext} from "./contexts/PlayerContext";
 import {TelegramService} from "./services/telegramService";
 import {PopupContainer} from './components/PopupContainer';
 
 const App: React.FC = () => {
-    const {player, telegramUser, setPlayer, setTelegramUser} = usePlayer();
+    const {setPlayer, setTelegramUser} = useApplicationContext();
     const [isLoading, setIsLoading] = useState(true);
     const [errorText, setErrorText] = useState<string | null>(null);
     const [isNewPlayer, setIsNewPlayer] = useState(false);
@@ -22,7 +22,7 @@ const App: React.FC = () => {
                 TelegramService.init();
 
                 // Получаем пользователя Telegram
-                const telegramUser = TelegramService.getUser();
+                const telegramUser = await TelegramService.getUser();
                 if (!telegramUser) {
                     throw new Error('Не удалось получить данные пользователя Telegram');
                 }
@@ -33,14 +33,16 @@ const App: React.FC = () => {
 
                 if (!playerData) {
                     setIsNewPlayer(true);
-                } else {
-                    setPlayer(playerData);
+                    return
                 }
+
+                setPlayer(playerData);
 
             } catch (error) {
                 const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
                 setErrorText(errorMessage);
                 setIsNewPlayer(true)
+
             } finally {
                 setIsLoading(false);
             }
