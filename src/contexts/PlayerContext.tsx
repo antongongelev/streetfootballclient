@@ -1,12 +1,13 @@
 // contexts/PlayerContext.tsx
 import React, { createContext, ReactNode, useContext, useState, useCallback } from 'react';
 import { Player } from "../api/types";
+import { TelegramUser } from "../services/telegramService";
 
 interface PlayerContextType {
     player: Player | null;
-    telegramId: number | null;
+    telegramUser: TelegramUser | null;
     setPlayer: (player: Player | null) => void;
-    setTelegramId: (id: number | null) => void;
+    setTelegramUser: (user: TelegramUser | null) => void;
     clearPlayer: () => void;
     updatePlayer: (updates: Partial<Player>) => void;
 }
@@ -15,7 +16,7 @@ const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
 export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [player, setPlayer] = useState<Player | null>(null);
-    const [telegramId, setTelegramId] = useState<number | null>(null);
+    const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
 
     const clearPlayer = useCallback(() => {
         setPlayer(null);
@@ -28,9 +29,9 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     return (
         <PlayerContext.Provider value={{
             player,
-            telegramId,
+            telegramUser,
             setPlayer,
-            setTelegramId,
+            setTelegramUser,
             clearPlayer,
             updatePlayer
         }}>

@@ -7,65 +7,53 @@ import {PlayerService} from "./api/playerService";
 import RegistrationScreen from "./components/RegistrationScreen";
 import {usePlayer} from "./contexts/PlayerContext";
 import {TelegramService} from "./services/telegramService";
-import {useTelegramTheme} from './hooks/useTelegramTheme'; // Добавляем импорт
-import { PopupContainer } from './components/PopupContainer';
-import './styles/popups.css'; // Добавляем импорт CSS
+import {PopupContainer} from './components/PopupContainer';
 
 const App: React.FC = () => {
-    const {player, setPlayer, setTelegramId} = usePlayer();
+    const {player, telegramUser, setPlayer, setTelegramUser} = usePlayer();
     const [isLoading, setIsLoading] = useState(true);
     const [errorText, setErrorText] = useState<string | null>(null);
     const [isNewPlayer, setIsNewPlayer] = useState(false);
-    const [registrationComplete, setRegistrationComplete] = useState(false);
-
-    // Используем хук темы - это самое важное изменение!
-    const theme = useTelegramTheme();
 
     useEffect(() => {
         const initApp = async () => {
             try {
-                // Инициализируем Telegram WebApp
+                // Инициализируем Telegram
                 TelegramService.init();
-                TelegramService.expand();
 
-                let telegramUserId = TelegramService.getUserId();
-                if (!telegramUserId) {
-                    telegramUserId = Math.floor(Math.random() * (100000 - 1 + 1)) + 1
+                // Получаем пользователя Telegram
+                const telegramUser = TelegramService.getUser();
+                if (!telegramUser) {
+                    throw new Error('Не удалось получить данные пользователя Telegram');
                 }
+                setTelegramUser(telegramUser);
 
-                setTelegramId(telegramUserId);
-
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
-                const playerData = await PlayerService.getByTelegramId(telegramUserId);
-                setIsLoading(false);
+                // Получаем данные игрока
+                const playerData = await PlayerService.getByTelegramId(telegramUser.id);
 
                 if (!playerData) {
                     setIsNewPlayer(true);
-                    return;
+                } else {
+                    setPlayer(playerData);
                 }
 
-                setPlayer(playerData);
-
             } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : '! ошибка';
+                const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
                 setErrorText(errorMessage);
-
+                setIsNewPlayer(true)
             } finally {
                 setIsLoading(false);
             }
         };
 
         initApp();
-    }, []);
+    }, [setPlayer, setTelegramUser]);
 
-    // Обработчик успешной регистрации
     const handleRegistrationSuccess = () => {
-        setRegistrationComplete(true);
+        setIsNewPlayer(false);
     };
 
     const renderContent = () => {
-        if (registrationComplete) return <MainScreen/>;
         if (isLoading) return <LoadingScreen/>;
         if (isNewPlayer) return <RegistrationScreen onRegistrationSuccess={handleRegistrationSuccess}/>;
         if (errorText) return <ErrorScreen message={errorText}/>;
@@ -75,7 +63,7 @@ const App: React.FC = () => {
     return (
         <>
             {renderContent()}
-            <PopupContainer/> {/* Всегда отображаем контейнер для popup'ов */}
+            <PopupContainer/>
         </>
     );
 };

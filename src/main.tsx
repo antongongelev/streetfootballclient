@@ -3,8 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { PlayerProvider } from "./contexts/PlayerContext";
-import { PopupProvider } from "./contexts/PopupContext"; // Добавляем импорт
-import './styles/popups.css'; // Добавляем импорт CSS
+import { PopupProvider } from "./contexts/PopupContext";
+import './styles/popups.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

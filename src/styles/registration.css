@@ -1,4 +1,4 @@
-/* RegistrationScreen.css */
+/* registration.css - упрощенная версия */
 .registration-container {
     max-width: 100%;
     padding: 20px;
@@ -18,7 +18,7 @@
     padding-top: 16px;
 }
 
-.registration-header h2 {
+.registration-header h3 {
     font-size: 20px;
     font-weight: 600;
     margin: 0;
@@ -50,7 +50,6 @@
     font-family: inherit;
 }
 
-/* Стили для переключателя пола */
 .gender-switch {
     display: flex;
     background: var(--tg-theme-secondary-bg-color, #f0f0f0);
@@ -80,7 +79,6 @@
     font-weight: 500;
 }
 
-/* Стили для загрузки аватара */
 .avatar-section {
     text-align: center;
     margin-bottom: 24px;
@@ -88,7 +86,6 @@
 }
 
 .avatar-preview-container {
-    position: relative;
     display: inline-block;
     margin-bottom: 8px;
 }
@@ -97,19 +94,10 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     overflow: hidden;
-    border: 2px dashed var(--tg-theme-hint-color, #999999);
-    transition: all 0.2s ease;
-}
-
-.avatar-preview:hover {
-    border-color: var(--tg-theme-button-color, #40a7e3);
-    transform: scale(1.05);
 }
 
 .avatar-image {
@@ -118,56 +106,6 @@
     object-fit: cover;
 }
 
-.avatar-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 8px;
-    text-align: center;
-    font-size: 12px;
-    font-family: inherit;
-    color: var(--tg-theme-text-color, #000000);
-}
-
-.avatar-icon {
-    font-size: 24px;
-}
-
-.remove-avatar-btn {
-    position: absolute;
-    top: -12px; /* Отодвигаем выше */
-    right: -12px; /* Отодвигаем правее */
-    width: 32px; /* Увеличиваем размер */
-    height: 32px; /* Увеличиваем размер */
-    border-radius: 50%;
-    background: var(--tg-theme-button-color, #40a7e3);
-    color: white;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    font-family: inherit;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Увеличиваем тень */
-    z-index: 10; /* Убедимся, что поверх всего */
-}
-
-.remove-avatar-btn:hover {
-    transform: scale(1.15); /* Увеличиваем ховер-эффект */
-    background: var(--tg-theme-button-color, #2a92d0);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4); /* Усиливаем тень при ховере */
-}
-
-.remove-avatar-icon {
-    width: 20px; /* Увеличиваем иконку */
-    height: 20px; /* Увеличиваем иконку */
-    filter: brightness(0) invert(1);
-}
-
-/* Стили для поля nickname */
 .nickname-input {
     width: 100%;
     box-sizing: border-box;
@@ -177,173 +115,6 @@
     border: 1px solid var(--tg-theme-hint-color, #999999);
 }
 
-/* Стили для даты рождения */
-.date-group {
-    position: relative;
-}
-
-.date-error {
-    position: absolute;
-    bottom: -18px;
-    left: 0;
-    margin-top: 4px;
-    font-family: inherit;
-    color: var(--tg-theme-destructive-text-color, #ff3b30);
-}
-
-/* Кнопка отправки */
-.submit-button {
-    margin-top: auto;
-    margin-bottom: 20px;
-    width: 100%;
-    font-family: inherit;
-    background: var(--tg-theme-button-color, #40a7e3);
-    color: var(--tg-theme-button-text-color, #ffffff);
-    border: none;
-}
-
-.submit-error {
-    text-align: center;
-    margin-bottom: 16px;
-    font-family: inherit;
-    color: var(--tg-theme-destructive-text-color, #ff3b30);
-}
-
-/* Стили для ошибок */
-.error-text {
-    color: var(--tg-theme-destructive-text-color, #ff3b30);
-    font-size: 12px;
-    margin-top: 4px;
-    font-family: inherit;
-}
-
-/* Адаптивность */
-@media (max-width: 480px) {
-    .registration-container {
-        padding: 16px;
-    }
-
-    .gender-option {
-        padding: 10px 12px;
-        font-size: 13px;
-    }
-
-    .avatar-preview {
-        width: 80px;
-        height: 80px;
-    }
-
-    .avatar-placeholder {
-        font-size: 11px;
-    }
-
-    .avatar-icon {
-        font-size: 20px;
-    }
-
-    .remove-avatar-btn {
-        width: 28px;
-        height: 28px;
-        top: -10px;
-        right: -10px;
-    }
-
-    .remove-avatar-icon {
-        width: 16px;
-        height: 16px;
-    }
-}
-
-/* Модальное окно обрезки аватара */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 20px;
-}
-
-.modal-content {
-    background: var(--tg-theme-bg-color, #ffffff);
-    border-radius: 12px;
-    padding: 24px;
-    max-width: 90vw;
-    max-height: 90vh;
-    overflow: auto;
-    text-align: center;
-    color: var(--tg-theme-text-color, #000000);
-}
-
-.modal-content h3 {
-    margin: 0 0 20px 0;
-    color: var(--tg-theme-text-color, #000000);
-    font-size: 18px;
-}
-
-.crop-container {
-    margin: 0 auto 20px;
-    max-width: 400px;
-    position: relative;
-    min-height: 200px;
-}
-
-.ReactCrop__crop-selection {
-    border: 2px solid var(--tg-theme-button-color, #40a7e3);
-}
-
-.ReactCrop__drag-handle::after {
-    background: var(--tg-theme-button-color, #40a7e3);
-}
-
-.modal-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-}
-
-.tg-button.secondary {
-    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-    color: var(--tg-theme-text-color, #000000);
-    border: 1px solid var(--tg-theme-hint-color, #999999);
-}
-
-.tg-button {
-    background: var(--tg-theme-button-color, #40a7e3);
-    color: var(--tg-theme-button-text-color, #ffffff);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-family: inherit;
-}
-
-.loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.8);
-    z-index: 10;
-    color: var(--tg-theme-text-color, #000000);
-}
-
-.ReactCrop--disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* Стили для select */
 .tg-input {
     width: 100%;
     padding: 12px 16px;
@@ -361,38 +132,43 @@
     border-color: var(--tg-theme-button-color, #40a7e3);
 }
 
-/* Стили для DatePicker */
-.date-picker-container {
-    position: relative;
+.submit-button {
+    margin-top: auto;
+    margin-bottom: 20px;
     width: 100%;
-}
-
-.date-input {
-    width: 100%;
-    padding: 12px 16px;
-    border-radius: 8px;
-    border: 1px solid var(--tg-theme-hint-color, #999999);
-    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
-    color: var(--tg-theme-text-color, #000000);
-    font-size: 14px;
     font-family: inherit;
-    box-sizing: border-box;
+    background: var(--tg-theme-button-color, #40a7e3);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-.calendar-icon {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    font-size: 18px;
-}
-
-/* registration.css - добавьте в конец файла */
-.avatar-hint {
+.error-text {
+    color: var(--tg-theme-destructive-text-color, #ff3b30);
     font-size: 12px;
-    color: var(--tg-theme-hint-color, #999999);
-    text-align: center;
     margin-top: 4px;
-    font-style: italic;
+    font-family: inherit;
+}
+
+.date-error {
+    margin-top: 4px;
+}
+
+@media (max-width: 480px) {
+    .registration-container {
+        padding: 16px;
+    }
+
+    .gender-option {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .avatar-preview {
+        width: 80px;
+        height: 80px;
+    }
 }

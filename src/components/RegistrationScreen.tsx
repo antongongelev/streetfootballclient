@@ -1,27 +1,23 @@
 // components/RegistrationScreen.tsx
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {usePlayer} from "../contexts/PlayerContext";
 import {PlayerService} from "../api/playerService";
 import DatePicker from "./DatePicker";
 import LoadingSpinner from "./LoadingSpinner";
-import AvatarEditorModal from "./AvatarEditorModal";
 import "../styles/registration.css";
 import {usePopupHelpers} from '../hooks/usePopupHelpers';
-import {TelegramService} from "../services/telegramService";
-import CancelIcon from '../assets/icons/cancel.png';
 import {PositionCode, POSITIONS} from "../api/types";
+import PersonIcon from '../assets/icons/person.png';
 
 interface RegistrationScreenProps {
-    onRegistrationSuccess: () => void;
+    onRegistrationSuccess : () => void;
 }
 
-// Используем коды позиций из types.ts
 const POSITION_CODES = Object.keys(POSITIONS) as PositionCode[];
 
 const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSuccess}) => {
     const {success, warn, error} = usePopupHelpers();
-    const {telegramId, setPlayer} = usePlayer();
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const {telegramUser, setPlayer} = usePlayer();
 
     const [formData, setFormData] = useState({
         nickname: '',
@@ -29,28 +25,14 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
         birthDate: '',
         primaryPosition: '',
         secondaryPosition: '',
-        avatar: null as File | null,
     });
 
-    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-    const [originalImage, setOriginalImage] = useState<string | null>(null);
-    const [showAvatarEditor, setShowAvatarEditor] = useState(false);
+    const [avatarPreview, setAvatarPreview] = useState<string>(PersonIcon);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isLoading, setIsLoading] = useState(false);
-    const [telegramAvatarUrl, setTelegramAvatarUrl] = useState<string | null>(null);
-    const [usingTelegramData, setUsingTelegramData] = useState({
-        nickname: false,
-        avatar: false
-    });
 
-    // Получаем данные из Telegram при загрузке компонента
+    // Заполняем данные из Telegram
     useEffect(() => {
-        const telegramUser = TelegramService.getUser();
-        const avatarUrl = TelegramService.getAvatarUrl();
-
-        setTelegramAvatarUrl(avatarUrl);
-
-        // Заполняем данные из Telegram, если они есть
         if (telegramUser) {
             const telegramNickname = telegramUser.username ||
                 telegramUser.first_name ||
@@ -60,72 +42,14 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
 
             if (telegramNickname) {
                 setFormData(prev => ({...prev, nickname: telegramNickname}));
-                setUsingTelegramData(prev => ({...prev, nickname: true}));
-            }
-        }
-
-        // Аватар из Telegram
-        if (avatarUrl) {
-            setAvatarPreview(avatarUrl);
-            setUsingTelegramData(prev => ({...prev, avatar: true}));
-        }
-    }, []);
-
-    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            if (!file.type.startsWith('image/')) {
-                setErrors({avatar: 'Пожалуйста, выберите изображение'});
-                return;
             }
 
-            if (file.size > 1024 * 1024) {
-                setErrors({avatar: 'Размер файла не должен превышать 1 MB'});
-                return;
+            // Аватар из Telegram или заглушка
+            if (telegramUser.photo_url) {
+                setAvatarPreview(telegramUser.photo_url);
             }
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const imageUrl = e.target?.result as string;
-                setOriginalImage(imageUrl);
-                setShowAvatarEditor(true);
-            };
-            reader.readAsDataURL(file);
         }
-    };
-
-    const handleCroppedImage = (blob: Blob) => {
-        const fileName = `avatar-${telegramId}.jpg`;
-        const file = new File([blob], fileName, {type: 'image/jpeg'});
-        setFormData(prev => ({...prev, avatar: file}));
-        setUsingTelegramData(prev => ({...prev, avatar: false}));
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            setAvatarPreview(e.target?.result as string);
-        };
-        reader.readAsDataURL(blob);
-
-        setShowAvatarEditor(false);
-        setOriginalImage(null);
-    };
-
-    const handleCancelCrop = () => {
-        setShowAvatarEditor(false);
-        setOriginalImage(null);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
-    };
-
-    const removeAvatar = () => {
-        setFormData(prev => ({...prev, avatar: null}));
-        setUsingTelegramData(prev => ({...prev, avatar: true}));
-        setAvatarPreview(telegramAvatarUrl);
-        if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-        }
-    };
+    }, [telegramUser]);
 
     const validateForm = (): boolean => {
         const newErrors: Record<string, string> = {};
@@ -145,24 +69,26 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
         }
 
         setErrors(newErrors);
-
-        if (Object.keys(newErrors).length > 0) {
-            warn('Пожалуйста, проверьте данные');
-            return false;
-        }
-
-        return true;
+        return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!validateForm()) return;
+        if (!validateForm()) {
+            warn('Пожалуйста, проверьте данные');
+            return;
+        }
+
+        if (!telegramUser) {
+            error('Ошибка: данные пользователя не найдены');
+            return;
+        }
 
         setIsLoading(true);
         try {
             // Регистрируем пользователя
-            const playerData = await PlayerService.register(telegramId!, {
+            const playerData = await PlayerService.register(telegramUser.id, {
                 nickname: formData.nickname,
                 male: formData.male,
                 birthDate: formData.birthDate,
@@ -173,44 +99,19 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
             // Обновляем контекст с новыми данными игрока
             setPlayer(playerData);
 
-            // Загружаем аватар если был выбран новый
-            if (formData.avatar) {
-                try {
-                    await PlayerService.uploadAvatar(telegramId!, formData.avatar);
-                    // Обновляем аватар в контексте
-                    setPlayer({...playerData, avatar: URL.createObjectURL(formData.avatar)});
-                } catch (uploadError) {
-                    console.error('Avatar upload failed:', uploadError);
-                    error('Не удалось сохранить аватар');
-                }
-            }
-
             success('Регистрация прошла успешно!');
             onRegistrationSuccess();
 
         } catch (err) {
             console.error('Registration failed:', err);
-            setErrors({submit: 'Ошибка регистрации. Попробуйте снова.'});
             error('Ошибка при регистрации');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const triggerFileInput = () => {
-        fileInputRef.current?.click();
-    };
-
     return (
         <div className="registration-container">
-            {showAvatarEditor && originalImage && (
-                <AvatarEditorModal
-                    imageSrc={originalImage}
-                    onSave={handleCroppedImage}
-                    onCancel={handleCancelCrop}
-                />
-            )}
-
             <div className="registration-header">
                 <h3>Укажите данные профиля</h3>
             </div>
@@ -218,51 +119,16 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
             <form onSubmit={handleSubmit} className="registration-form">
                 {/* Секция аватара */}
                 <div className="avatar-section">
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleAvatarChange}
-                        style={{display: 'none'}}
-                        id="avatar-upload"
-                    />
-
                     <div className="avatar-preview-container">
-                        <div
-                            className="avatar-preview"
-                            onClick={triggerFileInput}
-                            title="Нажмите чтобы изменить аватар"
-                        >
-                            {avatarPreview ? (
-                                <img
-                                    src={avatarPreview}
-                                    alt="Аватар"
-                                    className="avatar-image"
-                                    onError={() => setAvatarPreview(null)}
-                                />
-                            ) : (
-                                <div className="avatar-placeholder">
-                                    <span className="avatar-icon">📸</span>
-                                    <span className="avatar-text">Добавить фото</span>
-                                </div>
-                            )}
+                        <div className="avatar-preview" title="Аватар из Telegram">
+                            <img
+                                src={avatarPreview}
+                                alt="Аватар"
+                                className="avatar-image"
+                                onError={() => setAvatarPreview(PersonIcon)}
+                            />
                         </div>
-
-                        {formData.avatar && (
-                            <button
-                                type="button"
-                                className="remove-avatar-btn"
-                                onClick={removeAvatar}
-                                title="Вернуть аватар Telegram"
-                            >
-                                <img src={CancelIcon} alt="Удалить" className="remove-avatar-icon"/>
-                            </button>
-                        )}
                     </div>
-
-                    {errors.avatar && (
-                        <div className="error-text">{errors.avatar}</div>
-                    )}
                 </div>
 
                 {/* Поле никнейма */}
@@ -273,10 +139,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
                             type="text"
                             placeholder="Введите ваш никнейм"
                             value={formData.nickname}
-                            onChange={(e) => {
-                                setFormData(prev => ({...prev, nickname: e.target.value}));
-                                setUsingTelegramData(prev => ({...prev, nickname: false}));
-                            }}
+                            onChange={(e) => setFormData(prev => ({...prev, nickname: e.target.value}))}
                             className="tg-input nickname-input"
                             maxLength={30}
                             disabled={isLoading}
@@ -286,12 +149,6 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
                     {errors.nickname && (
                         <div className="error-text">{errors.nickname}</div>
                     )}
-
-                    {/*{usingTelegramData.nickname && (*/}
-                    {/*    <div className="nickname-hint">*/}
-                    {/*        Из вашего аккаунта Telegram*/}
-                    {/*    </div>*/}
-                    {/*)}*/}
                 </div>
 
                 {/* Выбор пола */}
@@ -369,9 +226,6 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
                     </select>
                 </div>
 
-                {errors.submit && (
-                    <div className="error-text submit-error">{errors.submit}</div>
-                )}
 
                 <button
                     type="submit"
