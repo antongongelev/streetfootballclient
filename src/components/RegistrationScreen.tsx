@@ -1,6 +1,6 @@
 // components/RegistrationScreen.tsx
 import React, {useEffect, useState} from "react";
-import {useApplicationContext} from "../contexts/PlayerContext";
+import {useApplicationContext} from "../contexts/ApplicationContext";
 import {PlayerService} from "../api/playerService";
 import DatePicker from "./DatePicker";
 import LoadingSpinner from "./LoadingSpinner";
@@ -10,7 +10,7 @@ import {PositionCode, POSITIONS} from "../api/types";
 import PersonIcon from '../assets/icons/person.png';
 
 interface RegistrationScreenProps {
-    onRegistrationSuccess : () => void;
+    onRegistrationSuccess: () => void;
 }
 
 const POSITION_CODES = Object.keys(POSITIONS) as PositionCode[];
@@ -33,21 +33,23 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
 
     // Заполняем данные из Telegram
     useEffect(() => {
-        if (telegramUser) {
-            const telegramNickname = telegramUser.username ||
-                telegramUser.first_name ||
-                (telegramUser.first_name && telegramUser.last_name
-                    ? `${telegramUser.first_name} ${telegramUser.last_name}`
-                    : telegramUser.last_name || '');
+        if (!telegramUser) {
+            error("Не найдет Telegram-пользователь")
+            return;
+        }
 
-            if (telegramNickname) {
-                setFormData(prev => ({...prev, nickname: telegramNickname}));
-            }
+        const telegramNickname = telegramUser.username ||
+            telegramUser.first_name ||
+            (telegramUser.first_name && telegramUser.last_name
+                ? `${telegramUser.first_name} ${telegramUser.last_name}`
+                : telegramUser.last_name || '');
 
-            // Аватар из Telegram или заглушка
-            if (telegramUser.photo_url) {
-                setAvatarPreview(telegramUser.photo_url);
-            }
+        if (telegramNickname) {
+            setFormData(prev => ({...prev, nickname: telegramNickname}));
+        }
+
+        if (telegramUser.photo_url) {
+            setAvatarPreview(telegramUser.photo_url);
         }
     }, [telegramUser]);
 

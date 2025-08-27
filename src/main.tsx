@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { PlayerProvider } from "./contexts/PlayerContext";
+import { PlayerProvider } from "./contexts/ApplicationContext";
 import { PopupProvider } from "./contexts/PopupContext";
 import './styles/popups.css';
 

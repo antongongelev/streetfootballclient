@@ -1,11 +1,11 @@
 // App.tsx
 import React, {useEffect, useState} from 'react';
-import LoadingScreen from './components/LoadingScreen';
+import StartScreen from './components/StartScreen';
 import ErrorScreen from './components/ErrorScreen';
 import MainScreen from './components/MainScreen';
 import {PlayerService} from "./api/playerService";
 import RegistrationScreen from "./components/RegistrationScreen";
-import {useApplicationContext} from "./contexts/PlayerContext";
+import {useApplicationContext} from "./contexts/ApplicationContext";
 import {TelegramService} from "./services/telegramService";
 import {PopupContainer} from './components/PopupContainer';
 
@@ -20,6 +20,7 @@ const App: React.FC = () => {
             try {
                 // Инициализируем Telegram
                 TelegramService.init();
+                await new Promise(resolve => setTimeout(resolve, 3000));
 
                 // Получаем пользователя Telegram
                 const telegramUser = await TelegramService.getUser();
@@ -56,7 +57,7 @@ const App: React.FC = () => {
     };
 
     const renderContent = () => {
-        if (isLoading) return <LoadingScreen/>;
+        if (isLoading) return <StartScreen/>;
         if (isNewPlayer) return <RegistrationScreen onRegistrationSuccess={handleRegistrationSuccess}/>;
         if (errorText) return <ErrorScreen message={errorText}/>;
         return <MainScreen/>;

@@ -16,7 +16,6 @@ export class TelegramService {
 
     static async getUser(): Promise<TelegramUser | null> {
         // Добавляем задержку в 3 секунды
-        await new Promise(resolve => setTimeout(resolve, 3000));
         return window.Telegram?.WebApp?.initDataUnsafe?.user || null;
     }
 }
