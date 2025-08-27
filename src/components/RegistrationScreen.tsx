@@ -74,6 +74,12 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
         return Object.keys(newErrors).length === 0;
     };
 
+    const getDefaultMaxDate = (): string => {
+        const date = new Date();
+        date.setFullYear(date.getFullYear() - 10);
+        return date.toISOString().split('T')[0];
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -183,6 +189,9 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
                         value={formData.birthDate}
                         onChange={(date) => setFormData(prev => ({...prev, birthDate: date}))}
                         disabled={isLoading}
+                        minDate="1960-01-01"
+                        maxDate={getDefaultMaxDate()} // Добавьте эту функцию
+                        defaultDate="2000-01-01"
                     />
                     {errors.birthDate && (
                         <div className="error-text date-error">{errors.birthDate}</div>
