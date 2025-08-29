@@ -588,3 +588,49 @@
     color: var(--tg-theme-text-color, #000000);
     text-align: center;
 }
+
+.form-action-buttons {
+    display: flex;
+    margin-top: 24px;
+    /* Убираем border-top: 1px solid var(--tg-theme-border-color, #e0e0e0); */
+}
+
+/* Скрываем scrollbar для всех элементов */
+::-webkit-scrollbar {
+    display: none; /* Скрываем scrollbar в Chrome, Safari, Edge */
+}
+
+* {
+    -ms-overflow-style: none;  /* Скрываем scrollbar в IE и Edge */
+    scrollbar-width: none;  /* Скрываем scrollbar в Firefox */
+}
+
+.form-action-buttons .save-button {
+    width: 100%;
+    background: var(--tg-theme-button-color, #40a7e3);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    padding: 16px 20px; /* Увеличиваем padding для лучшего вида */
+    border-radius: 12px; /* Немного увеличиваем радиус */
+    cursor: pointer;
+    font-size: 16px; /* Увеличиваем размер шрифта */
+    font-weight: 600; /* Делаем шрифт полужирным */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.form-action-buttons .save-button:hover:not(:disabled) {
+    transform: scale(1.02);
+}
+
+.form-action-buttons .save-button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.form-action-buttons .save-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
