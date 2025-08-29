@@ -142,26 +142,22 @@ const ProfilePage: React.FC = () => {
     }
 
     return (
-        <div className="page">
-            {/* Кнопка редактирования/отмены в правом верхнем углу */}
-            <button
-                className="edit-button-corner"
-                onClick={isEditing ? handleCancel : handleEdit}
-                disabled={isLoading || isSaving}
-                title={isEditing ? "Отменить редактирование" : "Редактировать профиль"}
-            >
-                <img
-                    src={isEditing ? CancelIcon : EditIcon}
-                    alt={isEditing ? "Отменить" : "Редактировать"}
-                    className="edit-icon"
-                />
-            </button>
+        <div className="registration-container profile-page-container">
+            <div className="registration-container"> {/* Используем тот же контейнер */}
 
-            <div className="profile-header">
-                <h1>Профиль</h1>
-            </div>
+                <button
+                    className="edit-button-corner"
+                    onClick={isEditing ? handleCancel : handleEdit}
+                    disabled={isLoading || isSaving}
+                    title={isEditing ? "Отменить редактирование" : "Редактировать профиль"}
+                >
+                    <img
+                        src={isEditing ? CancelIcon : EditIcon}
+                        alt={isEditing ? "Отменить" : "Редактировать"}
+                        className="edit-icon"
+                    />
+                </button>
 
-            <div className="registration-container">
                 <form className="registration-form">
                     {/* Секция аватара */}
                     <div className="avatar-section">

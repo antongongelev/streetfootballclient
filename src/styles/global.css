@@ -128,6 +128,8 @@ select.tg-input {
     display: flex;
     justify-content: space-around;
     padding: 8px 0;
+    z-index: 1000;
+    height: 60px;
 }
 
 .footer-button {
@@ -199,9 +201,23 @@ body {
 }
 
 .screen-container {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    width: 100vw;
     min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto; /* Добавляем вертикальный скролл */
+}
+
+.main-screen {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+    padding-bottom: 60px; /* Место для футера */
+    overflow-y: auto;
 }
 
 /* global.css - добавляем стили переключателя */

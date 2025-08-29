@@ -60,7 +60,11 @@ const App: React.FC = () => {
         if (isLoading) return <StartScreen/>;
         if (isNewPlayer) return <RegistrationScreen onRegistrationSuccess={handleRegistrationSuccess}/>;
         if (errorText) return <ErrorScreen message={errorText}/>;
-        return <MainScreen/>;
+        return (
+            <div className="screen-container"> {/* Добавьте этот контейнер */}
+                <MainScreen/>
+            </div>
+        );
     };
 
     return (

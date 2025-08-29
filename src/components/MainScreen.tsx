@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import Footer from './Footer';
-import MapPage from '../pages/MapPage';
-import ProfilePage from '../pages/ProfilePage';
-import HistoryPage from '../pages/HistoryPage';
-import SettingsPage from '../pages/SettingsPage';
+// MainScreen.tsx
+import Footer from "./Footer";
+import MapPage from "../pages/MapPage";
+import SettingsPage from "../pages/SettingsPage";
+import HistoryPage from "../pages/HistoryPage";
+import ProfilePage from "../pages/ProfilePage";
+import {useState} from "react";
 
 const MainScreen: React.FC = () => {
     const [activeTab, setActiveTab] = useState('map');
