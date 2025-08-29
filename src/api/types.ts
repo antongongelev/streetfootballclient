@@ -15,14 +15,14 @@ export type Player = {
     id: number;
     telegramId: number;
     nickname: string;
+    male: boolean;
     birthDate: string;
     primaryPosition: string;
     secondaryPosition: string | null;
-    avatar: string | null;
     createdAt: string;
 };
 
-export interface RegistrationData {
+export interface PlayerModifiableData {
     nickname: string;
     male: boolean;
     birthDate: string;

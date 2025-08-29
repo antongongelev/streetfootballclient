@@ -1,5 +1,5 @@
 import {ApiClient} from './client';
-import {Player, RegistrationData} from './types';
+import {Player, PlayerModifiableData} from './types';
 
 export const PlayerService = {
 
@@ -15,7 +15,7 @@ export const PlayerService = {
         }
     },
 
-    register: async (telegramId: number, data: RegistrationData): Promise<Player> => {
+    register: async (telegramId: number, data: PlayerModifiableData): Promise<Player> => {
         try {
             const {data: player} = await ApiClient.post<Player>('/players/create', {
                 telegramId,
@@ -24,6 +24,19 @@ export const PlayerService = {
             return player;
         } catch (error) {
             console.error('Registration failed:', error);
+            throw error;
+        }
+    },
+
+    update: async (telegramId: number, data: PlayerModifiableData): Promise<Player> => {
+        try {
+            const {data: player} = await ApiClient.post<Player>(`/players/update`, {
+                telegramId,
+                ...data
+            });
+            return player;
+        } catch (error) {
+            console.error('Update failed:', error);
             throw error;
         }
     },

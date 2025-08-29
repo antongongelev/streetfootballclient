@@ -34,7 +34,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({onRegistrationSu
     // Заполняем данные из Telegram
     useEffect(() => {
         if (!telegramUser) {
-            error("Не найдет Telegram-пользователь")
+            error("Не найден Telegram-пользователь")
             return;
         }
 

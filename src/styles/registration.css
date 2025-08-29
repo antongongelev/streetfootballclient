@@ -172,3 +172,419 @@
         height: 80px;
     }
 }
+
+.page {
+    padding: 20px;
+    padding-bottom: 80px;
+    min-height: 100vh;
+    background: var(--tg-theme-bg-color, #ffffff);
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px 0;
+}
+
+.profile-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--tg-theme-text-color, #000000);
+}
+
+.edit-button {
+    background: var(--tg-theme-button-color, #40a7e3);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.edit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.edit-controls {
+    display: flex;
+    gap: 12px;
+}
+
+.cancel-button {
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    color: var(--tg-theme-text-color, #000000);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.save-button {
+    background: var(--tg-theme-button-color, #40a7e3);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.save-button:disabled,
+.cancel-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    gap: 16px;
+}
+
+.loading-container p {
+    margin: 0;
+    color: var(--tg-theme-text-color, #000000);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .profile-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    .edit-controls {
+        justify-content: space-between;
+    }
+
+    .cancel-button,
+    .save-button {
+        flex: 1;
+    }
+}
+
+/* Маленькая кнопка редактирования в правом верхнем углу */
+.edit-button-small {
+    background: var(--tg-theme-button-color, #40a7e3);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.edit-button-small:hover {
+    transform: scale(1.1);
+}
+
+.edit-button-small:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Контейнер для кнопок действий внизу формы */
+.form-action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--tg-theme-border-color, #e0e0e0);
+}
+
+.form-action-buttons .cancel-button {
+    flex: 1;
+    background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+    color: var(--tg-theme-text-color, #000000);
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-action-buttons .save-button {
+    flex: 1;
+    background: var(--tg-theme-button-color, #40a7e3);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-action-buttons .save-button:disabled,
+.form-action-buttons .cancel-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .form-action-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .edit-button-small {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+}
+
+.edit-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+/* Убедитесь, что кнопка имеет правильные размеры для иконки */
+.edit-button-small {
+    background: var(--tg-theme-button-color, #40a7e3);
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.edit-button-small:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+
+.edit-button-small:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .edit-button-small {
+        width: 36px;
+        height: 36px;
+    }
+
+    .edit-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.edit-button-corner {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--tg-theme-button-color, #40a7e3);
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.edit-button-corner:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+
+.edit-button-corner:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.edit-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: brightness(0) invert(1); /* Делаем иконку белой */
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .edit-button-corner {
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .edit-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Убедимся, что контейнер страницы имеет относительное позиционирование */
+.page {
+    position: relative;
+    padding: 20px;
+    padding-bottom: 80px;
+    min-height: 100vh;
+    background: var(--tg-theme-bg-color, #ffffff);
+}
+
+.profile-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px 0;
+    padding-top: 40px; /* Добавляем отступ сверху для кнопки редактирования */
+}
+
+.profile-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--tg-theme-text-color, #000000);
+    text-align: center;
+}
+
+/* Кнопка редактирования/отмены в правом верхнем углу */
+.edit-button-corner {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--tg-theme-button-color, #40a7e3);
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.edit-button-corner:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+
+.edit-button-corner:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.edit-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: brightness(0) invert(1); /* Делаем иконку белой */
+}
+
+/* Контейнер для кнопки сохранения внизу формы */
+.form-action-buttons {
+    display: flex;
+    margin-top: 24px;
+}
+
+.form-action-buttons .save-button {
+    width: 100%;
+    background: var(--tg-theme-button-color, #40a7e3);
+    color: var(--tg-theme-button-text-color, #ffffff);
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-action-buttons .save-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .edit-button-corner {
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .edit-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Убедимся, что контейнер страницы имеет относительное позиционирование */
+.page {
+    position: relative;
+    padding: 20px;
+    padding-bottom: 80px;
+    min-height: 100vh;
+    background: var(--tg-theme-bg-color, #ffffff);
+}
+
+.profile-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px 0;
+    padding-top: 40px; /* Добавляем отступ сверху для кнопки редактирования */
+}
+
+.profile-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--tg-theme-text-color, #000000);
+    text-align: center;
+}
