@@ -2,7 +2,7 @@
 import Footer from "./Footer";
 import MapPage from "../pages/MapPage";
 import SettingsPage from "../pages/SettingsPage";
-import HistoryPage from "../pages/HistoryPage";
+import EventsPage from "../pages/EventsPage";
 import ProfilePage from "../pages/ProfilePage";
 import {useState} from "react";
 
@@ -13,7 +13,7 @@ const MainScreen: React.FC = () => {
         switch (activeTab) {
             case 'map': return <MapPage />;
             case 'profile': return <ProfilePage />;
-            case 'history': return <HistoryPage />;
+            case 'events': return <EventsPage />;
             case 'settings': return <SettingsPage />;
             default: return <MapPage />;
         }

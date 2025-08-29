@@ -35,7 +35,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 4px;
 }
 
 .footer-option.active {
@@ -45,12 +45,26 @@
 }
 
 .footer-icon {
-    font-size: 16px;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    transition: filter 0.2s ease;
+}
+
+/* Иконки для неактивных вкладок */
+.footer-option:not(.active) .footer-icon {
+    filter: brightness(0) invert(0.6); /* Серый цвет для неактивных */
+}
+
+/* Иконки для активных вкладок - БЕЛЫЕ */
+.footer-option.active .footer-icon {
+    filter: brightness(0) invert(1); /* Белый цвет для активных */
 }
 
 .footer-label {
     font-size: 10px;
     white-space: nowrap;
+    font-weight: 500;
 }
 
 /* Адаптивность для мобильных */
@@ -65,11 +79,12 @@
 
     .footer-option {
         padding: 6px 8px;
-        font-size: 11px;
+        gap: 3px;
     }
 
     .footer-icon {
-        font-size: 14px;
+        width: 18px;
+        height: 18px;
     }
 
     .footer-label {
@@ -90,5 +105,10 @@
 
     .footer-option:hover:not(.active) {
         background: var(--tg-theme-secondary-bg-color, #3d3d3d);
+    }
+
+    /* В темной теме делаем неактивные иконки светлее */
+    .footer-option:not(.active) .footer-icon {
+        filter: brightness(0) invert(0.8); /* Более светлый серый в темной теме */
     }
 }

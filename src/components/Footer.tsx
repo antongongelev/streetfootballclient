@@ -1,6 +1,12 @@
 // Footer.tsx
 import React from 'react';
-import "./../styles/footer.css"; // Будем использовать отдельный CSS файл
+import "./../styles/footer.css";
+
+// Импортируем иконки
+import MapIcon from '../assets/icons/footer_map.png';
+import ProfileIcon from '../assets/icons/footer_profile.png';
+import EventsIcon from '../assets/icons/footer_events.png';
+import SettingsIcon from '../assets/icons/footer_settings.png';
 
 interface FooterProps {
     activeTab: string;
@@ -9,10 +15,10 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = ({ activeTab, onTabChange }) => {
     const tabs = [
-        { id: 'map', label: 'Карта', icon: '🗺️' },
-        { id: 'profile', label: 'Профиль', icon: '👤' },
-        { id: 'history', label: 'История', icon: '📊' },
-        { id: 'settings', label: 'Настройки', icon: '⚙️' }
+        { id: 'map', label: 'Карта', icon: MapIcon },
+        { id: 'profile', label: 'Профиль', icon: ProfileIcon },
+        { id: 'events', label: 'События', icon: EventsIcon },
+        { id: 'settings', label: 'Настройки', icon: SettingsIcon }
     ];
 
     return (
@@ -23,8 +29,13 @@ const Footer: React.FC<FooterProps> = ({ activeTab, onTabChange }) => {
                         key={tab.id}
                         className={`footer-option ${activeTab === tab.id ? 'active' : ''}`}
                         onClick={() => onTabChange(tab.id)}
+                        title={tab.label} // Добавляем title для accessibility
                     >
-                        <span className="footer-icon">{tab.icon}</span>
+                        <img
+                            src={tab.icon}
+                            alt={tab.label}
+                            className="footer-icon"
+                        />
                         <span className="footer-label">{tab.label}</span>
                     </button>
                 ))}
