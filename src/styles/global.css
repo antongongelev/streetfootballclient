@@ -117,35 +117,6 @@ select.tg-input {
     animation: spin 1s linear infinite;
 }
 
-/* Стили для Footer (если они уже были в файле, оставляем их) */
-.footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--bg-color);
-    border-top: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-around;
-    padding: 8px 0;
-    z-index: 1000;
-    height: 60px;
-}
-
-.footer-button {
-    background: none;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    font-size: 12px;
-    opacity: 0.6;
-    transition: opacity 0.2s ease;
-}
-
-.footer-button.active {
-    opacity: 1;
-    font-weight: 500;
-}
 
 /* Стили для страниц (если они уже были) */
 .page {
@@ -242,4 +213,21 @@ body {
 
 .theme-toggle:hover {
     transform: scale(1.1);
+}
+
+/* global.css - добавьте в конец файла */
+
+/* Обеспечиваем отступ для контента, чтобы футер не перекрывал */
+.main-screen .content {
+    padding-bottom: 70px; /* Высота футера + отступы */
+    min-height: calc(100vh - 70px);
+    box-sizing: border-box;
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 480px) {
+    .main-screen .content {
+        padding-bottom: 66px;
+        min-height: calc(100vh - 66px);
+    }
 }

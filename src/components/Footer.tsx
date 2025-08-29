@@ -1,4 +1,6 @@
+// Footer.tsx
 import React from 'react';
+import "./../styles/footer.css"; // Будем использовать отдельный CSS файл
 
 interface FooterProps {
     activeTab: string;
@@ -6,32 +8,27 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ activeTab, onTabChange }) => {
+    const tabs = [
+        { id: 'map', label: 'Карта', icon: '🗺️' },
+        { id: 'profile', label: 'Профиль', icon: '👤' },
+        { id: 'history', label: 'История', icon: '📊' },
+        { id: 'settings', label: 'Настройки', icon: '⚙️' }
+    ];
+
     return (
         <footer className="footer">
-            <button
-                className={`footer-button ${activeTab === 'map' ? 'active' : ''}`}
-                onClick={() => onTabChange('map')}
-            >
-                🗺️ Карта
-            </button>
-            <button
-                className={`footer-button ${activeTab === 'profile' ? 'active' : ''}`}
-                onClick={() => onTabChange('profile')}
-            >
-                👤 Профиль
-            </button>
-            <button
-                className={`footer-button ${activeTab === 'history' ? 'active' : ''}`}
-                onClick={() => onTabChange('history')}
-            >
-                📊 История
-            </button>
-            <button
-                className={`footer-button ${activeTab === 'settings' ? 'active' : ''}`}
-                onClick={() => onTabChange('settings')}
-            >
-                ⚙️ Настройки
-            </button>
+            <div className="footer-switch">
+                {tabs.map((tab) => (
+                    <button
+                        key={tab.id}
+                        className={`footer-option ${activeTab === tab.id ? 'active' : ''}`}
+                        onClick={() => onTabChange(tab.id)}
+                    >
+                        <span className="footer-icon">{tab.icon}</span>
+                        <span className="footer-label">{tab.label}</span>
+                    </button>
+                ))}
+            </div>
         </footer>
     );
 };
